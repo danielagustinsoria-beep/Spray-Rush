@@ -1,0 +1,13 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-Spray_Rush.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:/Users/Usuario/Desktop/Spray Rush/Spray_Rush/Intermediate/Build/Win64/x64/Spray_RushEditor/Development/UnrealEd/SharedPCH.UnrealEd.Project.ValApi.ValExpApi.Cpp20.h.obj"
+"C:/Users/Usuario/Desktop/Spray Rush/Spray_Rush/Intermediate/Build/Win64/x64/UnrealEditor/Development/Spray_Rush/Spray_Rush.cpp.obj"
+"C:/Users/Usuario/Desktop/Spray Rush/Spray_Rush/Intermediate/Build/Win64/x64/UnrealEditor/Development/Spray_Rush/PerModuleInline.gen.cpp.obj"
+"C:/Users/Usuario/Desktop/Spray Rush/Spray_Rush/Intermediate/Build/Win64/x64/UnrealEditor/Development/Spray_Rush/Default.rc2.res"
+/OUT:"C:/Users/Usuario/Desktop/Spray Rush/Spray_Rush/Intermediate/Build/Win64/x64/UnrealEditor/Development/Spray_Rush/UnrealEditor-Spray_Rush.lib"

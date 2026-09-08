@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "Spray_Rush",
+			"Path": "..\\Source\\Spray_Rush.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "Spray_RushEditor",
+			"Path": "..\\Source\\Spray_RushEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}
