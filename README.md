@@ -1,6 +1,5 @@
 # Trabajo Final PEV 2 - Spray Rush
-**Alumno:** Daniel Agustín Soria | **Legajo:** 41.735.523 | **Modo:** Idea Propia | **Versión de Unreal: 5.6
-[UE 5.6]
+**Alumno:** Daniel Agustín Soria | **Legajo:** 41.735.523 | **Modo:** Idea Propia | **Versión de Unreal: [UE 5.6]
 ---
 ## Reglas y Mecánica Principal
 - **Mecánica:** - El jugador deberá moverse por el mapa con su skate, recolectar latas de pintura y colorear grafitis.
