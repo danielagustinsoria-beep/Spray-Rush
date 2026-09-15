@@ -4,6 +4,7 @@
 #include "Spray_Rush/Public/Framework/MenuPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Framework/Application/SlateApplication.h"
+#include "Spray_Rush/Public/UI/MainMenu.h"
 
 AMenuPlayerController::AMenuPlayerController()
 {}
@@ -12,15 +13,23 @@ void AMenuPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// 1. Mostrar el cursor del ratón siempre
+	if (WidgetMainMenuReference)
+	{
+		
+		WidgetMainMenu = CreateWidget<UMainMenu>(this, WidgetMainMenuReference);
+        
+		if (WidgetMainMenu)
+		{
+			WidgetMainMenu->AddToViewport();
+
+		}
+	}
+	
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
-
-	// 2. Configurar el modo de entrada exclusivo de UI
 	FInputModeUIOnly InputModeData;
 	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-    
 	SetInputMode(InputModeData);
 	
 	// Buscar actores por Tag en el nivel

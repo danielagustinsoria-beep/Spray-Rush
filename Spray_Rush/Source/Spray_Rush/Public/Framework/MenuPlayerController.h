@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraActor.h"
+#include "UI/MainMenu.h"
 #include "MenuPlayerController.generated.h"
 
 class ACameraActor;
@@ -14,6 +15,12 @@ class SPRAY_RUSH_API AMenuPlayerController : public APlayerController
 
 protected:
 	virtual void BeginPlay() override;
+	
+	UPROPERTY()
+	TObjectPtr<UMainMenu> WidgetMainMenu;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> WidgetMainMenuReference;
 	
 	UPROPERTY()
 	TObjectPtr<AActor> MainMenuCamera;

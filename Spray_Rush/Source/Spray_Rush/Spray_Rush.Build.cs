@@ -8,7 +8,8 @@ public class Spray_Rush : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+		//Comentario de Kent para acceder a la clase Menú del plugin: Incluir Menu.h
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "MultiplayerSessionOW", "UMG" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
