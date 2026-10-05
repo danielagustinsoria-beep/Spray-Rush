@@ -21,7 +21,10 @@ void AMenuPlayerController::BeginPlay()
 		if (WidgetMainMenu)
 		{
 			WidgetMainMenu->AddToViewport();
-
+			WidgetMainMenu->SearchGame_Button->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToSearchMatchCamera);
+			WidgetMainMenu->BackToMenu_Button->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToMainMenuCamera);
+			WidgetMainMenu->Options_Button->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToOptionsCamera);
+			WidgetMainMenu->BackToMenu_Options->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToMainMenuCamera);
 		}
 	}
 	
@@ -41,6 +44,7 @@ void AMenuPlayerController::BeginPlay()
 		MainMenuCamera = FoundActors[0];
 		// Establecer la cámara inicial inmediatamente sin blend
 		SetViewTarget(MainMenuCamera);
+		
 	}
 
 	FoundActors.Empty();
@@ -58,24 +62,27 @@ void AMenuPlayerController::BeginPlay()
 	}
 }
 
-void AMenuPlayerController::SwitchToMainMenuCamera(float BlendTime)
+void AMenuPlayerController::SwitchToMainMenuCamera()
 {
+	float BlendTime = 0.5f;
 	if (MainMenuCamera)
 	{
 		SetViewTargetWithBlend(MainMenuCamera, BlendTime, EViewTargetBlendFunction::VTBlend_EaseInOut, 2.0f, true);
 	}
 }
 
-void AMenuPlayerController::SwitchToSearchMatchCamera(float BlendTime)
+void AMenuPlayerController::SwitchToSearchMatchCamera()
 {
+	float BlendTime = 0.5f;
 	if (SearchMatchCamera)
 	{
 		SetViewTargetWithBlend(SearchMatchCamera, BlendTime, EViewTargetBlendFunction::VTBlend_EaseInOut, 2.0f, true);
 	}
 }
 
-void AMenuPlayerController::SwitchToOptionsCamera(float BlendTime)
+void AMenuPlayerController::SwitchToOptionsCamera()
 {
+	float BlendTime = 0.5f;
 	if (OptionsCamera)
 	{
 		SetViewTargetWithBlend(OptionsCamera, BlendTime, EViewTargetBlendFunction::VTBlend_EaseInOut, 2.0f, true);

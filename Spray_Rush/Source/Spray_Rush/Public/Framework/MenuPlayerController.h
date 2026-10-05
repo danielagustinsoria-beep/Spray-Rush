@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "Camera/CameraActor.h"
 #include "UI/MainMenu.h"
 #include "MenuPlayerController.generated.h"
 
@@ -35,11 +34,11 @@ public:
 	AMenuPlayerController();
 	
 	UFUNCTION(BlueprintCallable, Category = "Camera")
-	void SwitchToMainMenuCamera(float BlendTime = 0.5f);
+	void SwitchToMainMenuCamera();
 
 	UFUNCTION(BlueprintCallable, Category = "Camera")
-	void SwitchToSearchMatchCamera(float BlendTime = 0.5f);
+	void SwitchToSearchMatchCamera();
 
 	UFUNCTION(BlueprintCallable, Category = "Camera")
-	void SwitchToOptionsCamera(float BlendTime = 0.5f);
+	void SwitchToOptionsCamera();
 };

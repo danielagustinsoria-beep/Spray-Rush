@@ -7,9 +7,8 @@
 #include "Components/Button.h"
 #include "MainMenu.generated.h"
 
-/**
- * 
- */
+class UWidgetSwitcher;
+
 UCLASS()
 class SPRAY_RUSH_API UMainMenu : public UUserWidget
 {
@@ -18,29 +17,51 @@ class SPRAY_RUSH_API UMainMenu : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 	
-	UFUNCTION()
-	void SwitchToMenu();
+	UPROPERTY(meta = (BindWidget), BlueprintReadOnly)
+	TObjectPtr<UWidgetSwitcher> MenuSwitcher;
 
 public:
 	
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UButton> Tutorial;
-	
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UButton> SearchGame;
-	
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UButton> QuitGame;
-	
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UButton> Options;
-	
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UButton> ExitGame;
-	
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UButton> DontQuit;
+	// Propiedades
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> SearchGame_Button;
 	
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> BackToMenu;
+	TObjectPtr<UButton> Options_Button;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> QuitGameMenu_Button;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> QuitGameConfirmation_Button;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> DontQuit_Button;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> BackToMenu_Button;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> BackToMenu_Options;
+	
+	// Disabled
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> Tutorial_Button;
+	
+	// Métodos
+	
+	UFUNCTION()
+	void SwitchBackToMenu();
+	
+	UFUNCTION()
+	void SwitchToQuitGameMenu();
+	
+	UFUNCTION()
+	void QuitGameConfirmation();
+	
+	UFUNCTION()
+	void SwitchToSearchGame();
+	
+	UFUNCTION()
+	void SwitchToOptionsMenu();
 };
