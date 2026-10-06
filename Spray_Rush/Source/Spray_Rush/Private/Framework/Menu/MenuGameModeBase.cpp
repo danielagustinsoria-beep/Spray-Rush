@@ -1,8 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Spray_Rush/Public/Framework/MenuGameModeBase.h"
-#include "Spray_Rush/Public/Framework/MenuPlayerController.h"
+#include "Menu/MenuGameModeBase.h"
+#include "Menu/MenuPlayerController.h"
 
 AMenuGameModeBase::AMenuGameModeBase()
 {
