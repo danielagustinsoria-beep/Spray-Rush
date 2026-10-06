@@ -18,5 +18,5 @@ public:
 	ADeathmatchGameMode();
 	
 	UPROPERTY(BlueprintReadOnly, editAnywhere)
-	float ObjectivePaints = 10;
+	float ObjectivePaints = 5;
 };
