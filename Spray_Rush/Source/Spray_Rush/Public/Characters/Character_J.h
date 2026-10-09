@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Gameplay/Interfaces/PlayerInterface.h"
 #include "Character_J.generated.h"
 class USpringArmComponent;
 class UCameraComponent;
 
 UCLASS()
-class SPRAY_RUSH_API ACharacter_J : public ACharacter
+class SPRAY_RUSH_API ACharacter_J : public ACharacter, public IPlayerInterface
 {
 	GENERATED_BODY()
 
@@ -32,4 +33,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	virtual USkeletalMeshComponent* GetSkeletalMesh_Implementation() override;
 };

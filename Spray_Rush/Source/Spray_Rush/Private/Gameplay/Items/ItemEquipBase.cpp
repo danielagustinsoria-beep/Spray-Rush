@@ -1,0 +1,52 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Gameplay/Items/ItemEquipBase.h"
+
+#include "Components/SphereComponent.h"
+#include "Gameplay/Interfaces/PlayerInterface.h"
+
+
+// Sets default values
+AItemEquipBase::AItemEquipBase()
+{
+	SetReplicates(true);
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+	
+	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>("ItemMesh");
+	SetRootComponent(ItemMesh);
+	ItemMesh->SetIsReplicated(true);
+	
+	SphereCollision = CreateDefaultSubobject<USphereComponent>("SphereCollision");
+	SphereCollision->SetupAttachment(ItemMesh);
+	SphereCollision->SetSphereRadius(100.0f);
+}
+
+void AItemEquipBase::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+	if (!OtherActor) return;
+	if (!HasAuthority()) return;
+	if (OtherActor->Implements<UPlayerInterface>())
+	{
+		USkeletalMeshComponent* SkeletalMeshComponent = IPlayerInterface::Execute_GetSkeletalMesh(OtherActor);
+		AttachToComponent(SkeletalMeshComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale, SocketName);
+	}
+}
+
+// Called when the game starts or when spawned
+void AItemEquipBase::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+// Called every frame
+void AItemEquipBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+
+
+

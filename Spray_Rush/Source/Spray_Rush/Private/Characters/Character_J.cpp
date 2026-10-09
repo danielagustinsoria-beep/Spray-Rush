@@ -49,3 +49,8 @@ void ACharacter_J::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+USkeletalMeshComponent* ACharacter_J::GetSkeletalMesh_Implementation()
+{
+	return GetMesh();	
+}
+
