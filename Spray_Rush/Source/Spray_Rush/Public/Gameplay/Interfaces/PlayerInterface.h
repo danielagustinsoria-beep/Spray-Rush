@@ -25,6 +25,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Player")
 	USkeletalMeshComponent* GetSkeletalMesh();
 	
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Player")
-	void PaintWall();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Equipment")
+	AActor* GetAttachedActorInSocket(FName SocketName);
 };

@@ -54,3 +54,22 @@ USkeletalMeshComponent* ACharacter_J::GetSkeletalMesh_Implementation()
 	return GetMesh();	
 }
 
+AActor* ACharacter_J::GetAttachedActorInSocket_Implementation(FName SocketName)
+{
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors);
+
+	for (AActor* Attached : AttachedActors)
+	{
+		if (Attached && Attached->GetRootComponent())
+		{
+			if (Attached->GetRootComponent()->GetAttachSocketName() == SocketName)
+			{
+				Attached->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+				return Attached;
+			}
+		}
+	}
+
+	return nullptr;
+}

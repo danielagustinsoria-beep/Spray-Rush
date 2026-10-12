@@ -21,10 +21,11 @@ void AMenuPlayerController::BeginPlay()
 		if (WidgetMainMenu)
 		{
 			WidgetMainMenu->AddToViewport();
-			WidgetMainMenu->SearchGame_Button->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToSearchMatchCamera);
-			WidgetMainMenu->BackToMenu_Button->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToMainMenuCamera);
-			WidgetMainMenu->Options_Button->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToOptionsCamera);
-			WidgetMainMenu->BackToMenu_Options->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToMainMenuCamera);
+			WidgetMainMenu->Button_SearchGame->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToSearchMatchCamera);
+			WidgetMainMenu->Button_BackToMenu->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToMainMenuCamera);
+			WidgetMainMenu->Button_Options->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToOptionsCamera);
+			WidgetMainMenu->Button_BackToMenu_Options->OnClicked.AddDynamic(this, &AMenuPlayerController::SwitchToMainMenuCamera);
+			WidgetMainMenu->Button_BackToMenu_Options_1->OnClicked.AddDynamic(this,&AMenuPlayerController::SwitchToMainMenuCamera);
 		}
 	}
 	

@@ -8,6 +8,7 @@
 #include "MainMenu.generated.h"
 
 class UWidgetSwitcher;
+class UEditableTextBox;
 
 UCLASS()
 class SPRAY_RUSH_API UMainMenu : public UUserWidget
@@ -15,40 +16,57 @@ class SPRAY_RUSH_API UMainMenu : public UUserWidget
 	GENERATED_BODY()
 	
 protected:
-	virtual void NativeConstruct() override;
+	virtual void NativeOnInitialized() override;
 	
 	UPROPERTY(meta = (BindWidget), BlueprintReadOnly)
 	TObjectPtr<UWidgetSwitcher> MenuSwitcher;
 
 public:
 	
-	// Propiedades
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> SearchGame_Button;
+	TObjectPtr<UButton> Button_SearchGame;
 	
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> Options_Button;
+	TObjectPtr<UButton> Button_Options;
 	
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> QuitGameMenu_Button;
+	TObjectPtr<UButton> Button_QuitGameMenu;
 	
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> QuitGameConfirmation_Button;
+	TObjectPtr<UButton> Button_QuitGameConfirmation;
 	
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> DontQuit_Button;
+	TObjectPtr<UButton> Button_DontQuit;
 	
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> BackToMenu_Button;
+	TObjectPtr<UButton> Button_BackToMenu;
 	
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> BackToMenu_Options;
+	TObjectPtr<UButton> Button_BackToMenu_Options;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> Button_ToListenServer;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> Button_BackToMenu_Options_1;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> Button_Host;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> Button_JoinServer;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UEditableTextBox> EditableTextBox_IPAdress;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TSoftObjectPtr<UWorld> Level;
+	
 	
 	// Disabled
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> Tutorial_Button;
+	//UPROPERTY(meta = (BindWidget))
+	//TObjectPtr<UButton> Tutorial_Button;
 	
-	// Métodos
 	
 	UFUNCTION()
 	void SwitchBackToMenu();
@@ -64,4 +82,13 @@ public:
 	
 	UFUNCTION()
 	void SwitchToOptionsMenu();
+	
+	UFUNCTION()
+	void SwitchToListenServer();
+	
+	UFUNCTION()
+	void OnButtonHostClicked();
+	
+	UFUNCTION()
+	void OnButtonJoinServerClicked();
 };

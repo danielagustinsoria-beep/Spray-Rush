@@ -35,4 +35,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	virtual USkeletalMeshComponent* GetSkeletalMesh_Implementation() override;
+	
+	virtual AActor* GetAttachedActorInSocket_Implementation(FName SocketName) override;
 };
