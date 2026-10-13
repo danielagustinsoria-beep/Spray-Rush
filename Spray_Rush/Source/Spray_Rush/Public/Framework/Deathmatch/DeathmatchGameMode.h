@@ -35,7 +35,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Gamemode")
 	float MatchStartTimeDuration;
 	
-
 	UPROPERTY(BlueprintReadOnly, Category = "Gamemode")
 	TArray<TObjectPtr<APaintableGraffiti>> PaintableGraffitis;
 	
