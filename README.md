@@ -3,7 +3,7 @@
 ---
 ## Reglas y Mecánica Principal
 - **Mecánica:** - El jugador deberá moverse por el mapa con su skate, recolectar latas de pintura y colorear grafitis, se pueden robar los sprays del otro jugador.
-- **Cómo se gana:** Cómo se gana: El primero en pintar 3 paredes gana la partida. Si se agota el tiempo de la ronda (3 minutos), gana quien haya pintado más paredes; si hay empate, no hay ganador. La pantalla final muestra Victoria, Derrota o Empate a cada jugador.
+- **Cómo se gana:** Cómo se gana: El primero en pintar 3 paredes gana la partida. Si se agota el tiempo de la ronda (1 minuto), gana quien haya pintado más paredes; si hay empate, no hay ganador. La pantalla final muestra Victoria, Derrota o Empate a cada jugador.
 ---
 ## Ficha Técnica de Red
 Ficha Técnica de Red
