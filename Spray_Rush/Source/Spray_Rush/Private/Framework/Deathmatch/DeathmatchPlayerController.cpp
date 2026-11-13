@@ -6,7 +6,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
+#include "Engine/Engine.h"
 #include "Characters/Character_J.h"
+#include "UI/DeathmatchHUDWidget.h"
 
 void ADeathmatchPlayerController::BeginPlay()
 {
@@ -21,6 +23,25 @@ void ADeathmatchPlayerController::BeginPlay()
 				Subsystem->AddMappingContext(DefaultMappingContext, MappingPriority);
 			}
 		}
+	}
+
+	// El HUD solo existe en la maquina del jugador dueno de este controller.
+	if (IsLocalController() && HUDWidgetClass)
+	{
+		HUDWidget = CreateWidget<UDeathmatchHUDWidget>(this, HUDWidgetClass);
+		if (HUDWidget)
+		{
+			HUDWidget->AddToViewport();
+		}
+	}
+}
+
+void ADeathmatchPlayerController::Client_ShowMessage_Implementation(const FString& Message)
+{
+	const TCHAR* Where = (GetNetMode() == NM_Client) ? TEXT("Cliente") : TEXT("Servidor");
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, FString::Printf(TEXT("[%s] %s"), Where, *Message));
 	}
 }
 

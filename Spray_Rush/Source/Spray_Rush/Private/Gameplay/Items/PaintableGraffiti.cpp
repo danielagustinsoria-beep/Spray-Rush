@@ -1,65 +1,113 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Gameplay/Items/PaintableGraffiti.h"
 
 #include "Components/BoxComponent.h"
+#include "GameFramework/Pawn.h"
 #include "Gameplay/Interfaces/PlayerInterface.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "Net/UnrealNetwork.h"
+#include "Framework/Deathmatch/DeathmatchGameMode.h"
+#include "Framework/Deathmatch/DeathmatchPlayerController.h"
+#include "Framework/Deathmatch/DeathmatchPlayerState.h"
 
-
-// Sets default values
 APaintableGraffiti::APaintableGraffiti()
 {
-	SetReplicates(true);
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	
-	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>("ItemMesh");
-	SetRootComponent(ItemMesh);
-	ItemMesh->SetIsReplicated(true);
-	
-	BoxCollision = CreateDefaultSubobject<UBoxComponent>("BoxComponent");
-	BoxCollision->SetupAttachment(ItemMesh);
-	
+    SetReplicates(true);
+    PrimaryActorTick.bCanEverTick = true;
+
+    ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>("ItemMesh");
+    SetRootComponent(ItemMesh);
+
+    BoxCollision = CreateDefaultSubobject<UBoxComponent>("BoxComponent");
+    BoxCollision->SetupAttachment(ItemMesh);
+}
+
+void APaintableGraffiti::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME(APaintableGraffiti, bIsPaintable);
+    DOREPLIFETIME(APaintableGraffiti, PaintColor);
 }
 
 void APaintableGraffiti::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	Super::NotifyActorBeginOverlap(OtherActor);
-	if (!OtherActor) return;
-	
-	const FName TargetSocketName = TEXT("Hand_RSocket");
-	
-	if (!HasAuthority()) return;
-	if (OtherActor->Implements<UPlayerInterface>() && bIsPaintable)
-	{
-		AActor* AttachedObject = IPlayerInterface::Execute_GetAttachedActorInSocket(OtherActor, TargetSocketName);
-		
-		if (AttachedObject)
-		{
-			bIsPaintable = false;
-			UE_LOG(LogTemp, Warning, TEXT("LA PARED FUE PINTADA :D"));
-			AttachedObject->Destroy();
-			
-			//Avisarle a la mesh que se pinte.
-		}
-		else
-		{
-			UE_LOG(LogTemp, Log, TEXT("No tienes lata para pintar."));
-		}
-	}
+    Super::NotifyActorBeginOverlap(OtherActor);
+
+    // Solo el servidor decide. Los clientes reciben el resultado por replicacion.
+    if (!HasAuthority() || !OtherActor || !bIsPaintable) return;
+    if (!OtherActor->Implements<UPlayerInterface>()) return;
+
+    // Solo se puede pintar con la partida en curso.
+    ADeathmatchGameMode* GM = GetWorld()->GetAuthGameMode<ADeathmatchGameMode>();
+    if (!GM || !GM->IsMatchInProgress()) return;
+
+    APawn* Pawn = Cast<APawn>(OtherActor);
+    if (!Pawn) return;
+
+    ADeathmatchPlayerState* PS = Cast<ADeathmatchPlayerState>(Pawn->GetPlayerState());
+    ADeathmatchPlayerController* PC = Cast<ADeathmatchPlayerController>(Pawn->GetController());
+    if (!PS) return;
+
+    const FName TargetSocketName = TEXT("Hand_RSocket");
+    AActor* Spray = IPlayerInterface::Execute_GetAttachedActorInSocket(OtherActor, TargetSocketName);
+
+    if (!Spray)
+    {
+        // Client RPC: el aviso le llega solo al jugador que lo necesita.
+        if (PC) PC->Client_ShowMessage(TEXT("No tienes lata para pintar."));
+        return;
+    }
+
+    Spray->Destroy();
+    PS->SetHasCan(false);
+
+    // Cambio de estado en el servidor: se replica a todos los clientes.
+    PaintColor = PS->PlayerColor;
+    bIsPaintable = false;
+    OnRep_IsPaintable(); // El servidor/host no recibe el RepNotify solo: se llama a mano.
+
+    PS->AddPaintedWall();
+
+    Multicast_PlayPaintFX(GetActorLocation(), PaintColor);
+
+    if (PC) PC->Client_ShowMessage(TEXT("¡Pintaste una pared!"));
+
+    // Ultimo paso: el GameMode revisa si este jugador llego al objetivo.
+    GM->WallPainted(PS);
 }
 
-// Called when the game starts or when spawned
+void APaintableGraffiti::OnRep_IsPaintable()
+{
+    ApplyPaintVisual();
+}
+
+void APaintableGraffiti::ApplyPaintVisual()
+{
+    if (bIsPaintable || !ItemMesh) return;
+
+    if (!PaintMID)
+    {
+        PaintMID = ItemMesh->CreateAndSetMaterialInstanceDynamic(0);
+    }
+    if (PaintMID)
+    {
+        PaintMID->SetVectorParameterValue(ColorParameterName, PaintColor);
+    }
+}
+
+void APaintableGraffiti::Multicast_PlayPaintFX_Implementation(FVector Location, FLinearColor Color)
+{
+    BP_PlayPaintFX(Location, Color);
+}
+
 void APaintableGraffiti::BeginPlay()
 {
-	Super::BeginPlay();
-	
+    Super::BeginPlay();
 }
 
-// Called every frame
 void APaintableGraffiti::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaTime);
 }
-
