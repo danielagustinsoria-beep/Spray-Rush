@@ -20,6 +20,11 @@ public:
 	UFUNCTION(Client, Reliable)
 	void Client_ShowMessage(const FString& Message);
 
+	// Server RPC: el cliente pide robar la lata de otro jugador (tecla E).
+	// El servidor valida partida en curso, distancia, cooldown y una lata por jugador.
+	UFUNCTION(Server, Reliable)
+	void Server_TrySteal();
+
 protected:
 	virtual void BeginPlay() override;
 	
@@ -36,6 +41,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Move;
+
+	// Tecla E: robar lata.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_Interact;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Input")
 	float velocityScale = 1.f;
@@ -49,4 +58,5 @@ protected:
 	
 	void HandleJump(const FInputActionValue& Value);
 	void HandleMove(const FInputActionValue& Value);
+	void HandleInteract(const FInputActionValue& Value);
 };

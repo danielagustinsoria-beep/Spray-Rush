@@ -7,7 +7,10 @@
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
 #include "Engine/Engine.h"
+#include "EngineUtils.h"
 #include "Characters/Character_J.h"
+#include "Framework/Deathmatch/DeathmatchGameMode.h"
+#include "Gameplay/Items/ItemEquipBase.h"
 #include "UI/DeathmatchHUDWidget.h"
 
 void ADeathmatchPlayerController::BeginPlay()
@@ -45,6 +48,44 @@ void ADeathmatchPlayerController::Client_ShowMessage_Implementation(const FStrin
 	}
 }
 
+void ADeathmatchPlayerController::Server_TrySteal_Implementation()
+{
+	// Esto corre SOLO en el servidor: aca se valida todo.
+	ADeathmatchGameMode* GM = GetWorld()->GetAuthGameMode<ADeathmatchGameMode>();
+	APawn* MyPawn = GetPawn();
+	if (!GM || !GM->IsMatchInProgress() || !MyPawn) return;
+
+	// Busca la lata mas cercana que lleve OTRO jugador y este al alcance.
+	AItemEquipBase* Target = nullptr;
+	float BestDistSq = TNumericLimits<float>::Max();
+
+	for (TActorIterator<AItemEquipBase> It(GetWorld()); It; ++It)
+	{
+		AItemEquipBase* Can = *It;
+		AActor* Holder = Can->GetAttachParentActor();
+		if (!Holder || Holder == MyPawn) continue;
+		if (!Can->IsInStealRange(MyPawn)) continue;
+
+		const float DistSq = FVector::DistSquared(MyPawn->GetActorLocation(), Can->GetActorLocation());
+		if (DistSq < BestDistSq)
+		{
+			BestDistSq = DistSq;
+			Target = Can;
+		}
+	}
+
+	if (!Target)
+	{
+		Client_ShowMessage(TEXT("No hay ninguna lata al alcance."));
+		return;
+	}
+
+	if (!Target->TryEquipTo(MyPawn))
+	{
+		Client_ShowMessage(TEXT("No pudiste robarla (¿ya llevas una o fue robada hace poco?)."));
+	}
+}
+
 void ADeathmatchPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -70,6 +111,16 @@ void ADeathmatchPlayerController::SetupInputComponent()
 				&ADeathmatchPlayerController::HandleMove
 			);
 			UE_LOG(LogTemp, Warning, TEXT("DeathmatchPlayerController::IA_ROTATION PRESSED"));
+		}
+
+		if (IA_Interact)
+		{
+			EnhancedInputComponent->BindAction(
+				IA_Interact,
+				ETriggerEvent::Started,
+				this,
+				&ADeathmatchPlayerController::HandleInteract
+			);
 		}
 	}
 }
@@ -102,4 +153,9 @@ void ADeathmatchPlayerController::HandleMove(const FInputActionValue& Value)
 			ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
 		}
 	}
+}
+
+void ADeathmatchPlayerController::HandleInteract(const FInputActionValue& Value)
+{
+	Server_TrySteal();
 }

@@ -19,6 +19,13 @@ public:
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
+	// Solo servidor. Equipa esta lata a NewHolder (recoger del suelo o robar).
+	// Devuelve true si lo logra.
+	bool TryEquipTo(AActor* NewHolder);
+
+	// true si Thief esta a menos de StealRange de esta lata.
+	bool IsInStealRange(const AActor* Thief) const;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -38,6 +45,10 @@ private:
 	// Segundos durante los que una lata robada no puede volver a robarse.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item", meta = (AllowPrivateAccess = "true"))
 	float StealCooldown = 1.5f;
+
+	// Distancia maxima (en unidades) a la que se puede robar esta lata con la tecla E.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item", meta = (AllowPrivateAccess = "true"))
+	float StealRange = 150.f;
 
 	float LastTransferTime = -100.f;
 };

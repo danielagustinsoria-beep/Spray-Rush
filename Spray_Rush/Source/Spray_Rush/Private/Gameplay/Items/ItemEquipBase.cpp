@@ -34,33 +34,43 @@ void AItemEquipBase::NotifyActorBeginOverlap(AActor* OtherActor)
 {
     Super::NotifyActorBeginOverlap(OtherActor);
 
-    // Recoger y robar lo decide solo el servidor.
+    // Recoger una lata del suelo sigue siendo automatico (solo servidor).
+    // Robarle la lata a otro jugador NO ocurre por overlap: requiere la tecla E
+    // (ver ADeathmatchPlayerController::Server_TrySteal).
     if (!HasAuthority() || !OtherActor) return;
-    if (!OtherActor->Implements<UPlayerInterface>()) return;
+    if (GetAttachParentActor()) return;
+
+    TryEquipTo(OtherActor);
+}
+
+bool AItemEquipBase::TryEquipTo(AActor* NewHolder)
+{
+    if (!HasAuthority() || !NewHolder) return false;
+    if (!NewHolder->Implements<UPlayerInterface>()) return false;
 
     // Si la lata ya esta en manos de este jugador, no hay nada que hacer.
     AActor* PreviousHolder = GetAttachParentActor();
-    if (PreviousHolder == OtherActor) return;
+    if (PreviousHolder == NewHolder) return false;
 
     // Una lata recien robada no puede robarse de vuelta al instante.
     const float Now = GetWorld()->GetTimeSeconds();
-    if (PreviousHolder && (Now - LastTransferTime) < StealCooldown) return;
+    if (PreviousHolder && (Now - LastTransferTime) < StealCooldown) return false;
 
     // Un jugador solo puede llevar una lata a la vez.
     TArray<AActor*> Attached;
-    OtherActor->GetAttachedActors(Attached);
+    NewHolder->GetAttachedActors(Attached);
     for (AActor* A : Attached)
     {
-        if (A && A->IsA<AItemEquipBase>()) return;
+        if (A && A->IsA<AItemEquipBase>()) return false;
     }
 
-    USkeletalMeshComponent* SkeletalMeshComponent = IPlayerInterface::Execute_GetSkeletalMesh(OtherActor);
-    if (!SkeletalMeshComponent) return;
+    USkeletalMeshComponent* SkeletalMeshComponent = IPlayerInterface::Execute_GetSkeletalMesh(NewHolder);
+    if (!SkeletalMeshComponent) return false;
 
     AttachToComponent(SkeletalMeshComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale, SocketName);
     LastTransferTime = Now;
 
-    if (ADeathmatchPlayerState* NewPS = GetDMPlayerState(OtherActor))
+    if (ADeathmatchPlayerState* NewPS = GetDMPlayerState(NewHolder))
     {
         NewPS->SetHasCan(true);
     }
@@ -78,6 +88,13 @@ void AItemEquipBase::NotifyActorBeginOverlap(AActor* OtherActor)
             PC->Client_ShowMessage(TEXT("¡Te robaron la lata!"));
         }
     }
+
+    return true;
+}
+
+bool AItemEquipBase::IsInStealRange(const AActor* Thief) const
+{
+    return Thief && FVector::Dist(Thief->GetActorLocation(), GetActorLocation()) <= StealRange;
 }
 
 void AItemEquipBase::BeginPlay()
