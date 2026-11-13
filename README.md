@@ -8,12 +8,19 @@
 ## Ficha Técnica de Red
 Ficha Técnica de Red
 RepNotify: bIsPaintable en APaintableGraffiti -> al cambiar, todos los clientes (y el host) aplican el color del jugador a la pared pintada.
+
 Server RPC: Server_TrySteal en ADeathmatchPlayerController -> el servidor valida que la partida esté en curso, que haya una lata de otro jugador dentro del alcance (StealRange), que no esté en cooldown y que el jugador no lleve ya una lata.
+
 Client RPC: Client_ShowMessage en ADeathmatchPlayerController -> avisos directos a un solo jugador (por ejemplo "No tienes lata para pintar" o "¡Te robaron la lata!").
+
 NetMulticast RPC: Multicast_PlayPaintFX en APaintableGraffiti -> efecto visual y sonido de pintura para todos los clientes.
+
 HasAuthority: la recogida y el robo de latas, el pintado de paredes, el puntaje, la condición de victoria y el fin de partida se validan solo en el servidor.
+
 Replicated: PaintColor (APaintableGraffiti), PaintedWalls, bHasCan y PlayerColor (ADeathmatchPlayerState), RemainingTime y WinnerPlayerState (ADeathmatchGameState).
+
 Framework: ADeathmatchGameMode (reglas, inicio, timer y fin de partida), ADeathmatchGameState (tiempo restante y ganador; estado Lobby/Jugando/Fin mediante el MatchState), ADeathmatchPlayerState (paredes pintadas, lata equipada y color), ADeathmatchPlayerController (HUD e inputs) y ACharacter_J (personaje replicado).
+
 ---
 ## Cómo Probar el Proyecto
 EN EL EDITOR: 
